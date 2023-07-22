@@ -6,12 +6,8 @@ namespace DIConsoleApp.Feature.DataStorage;
 
 public class FileSystemDataStorage
 {
-    private JsonDataSerializer DataSerializer { get; }
-
-    public FileSystemDataStorage()
-    {
-        DataSerializer = new JsonDataSerializer();
-    }
+    private static XmlDataSerializer XmlDataSerializer => new();
+    private static JsonDataSerializer JsonDataSerializer => new();
 
     public ImmutableArray<BasicDataModel> Load()
     {
@@ -19,12 +15,28 @@ public class FileSystemDataStorage
 
         var items = data.Split(new [] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
-        return items.Select(x => DataSerializer.Deserialize(x)).ToImmutableArray();
+        if (ApplicationConfiguration.IsXmlSerializer)
+        {
+            return items.Select(x => XmlDataSerializer.Deserialize(x)).ToImmutableArray();
+        }
+        else
+        {
+            return items.Select(x => JsonDataSerializer.Deserialize(x)).ToImmutableArray();
+        }
     }
 
     public void Save(ImmutableArray<BasicDataModel> data)
     {
-        var serializedItems = data.Select(x => DataSerializer.Serialize(x));
+        IEnumerable<string> serializedItems;
+        if (ApplicationConfiguration.IsXmlSerializer)
+        {
+            serializedItems = data.Select(x => XmlDataSerializer.Serialize(x));
+        }
+        else
+        {
+            serializedItems = data.Select(x => JsonDataSerializer.Serialize(x));
+        }
+
         var allItems = string.Join(Environment.NewLine, serializedItems);
         SaveToFile(allItems, "some-cool-filename.dat");
     }
