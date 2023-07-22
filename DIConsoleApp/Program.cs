@@ -1,7 +1,7 @@
 ﻿using DIConsoleApp.Feature.DataStorage;
 
-var databaseDataStorage = new DatabaseDataStorage();
-var fileSystemDataStorage = new FileSystemDataStorage();
+var source = new SourceDataStorage();
+var target = new TargetDataStorage();
 
 Console.WriteLine("No DI ConsoleApp is running.");
         
@@ -40,12 +40,12 @@ while (true)
 
 void Pull()
 {
-    var dataModels = databaseDataStorage.Load();
-    fileSystemDataStorage.Save(dataModels);
+    var dataModels = source.Load();
+    target.Save(dataModels);
 }
 
 void Push()
 {
-    var data = fileSystemDataStorage.Load();
-    databaseDataStorage.Save(data);
+    var data = target.Load();
+    source.Save(data);
 }

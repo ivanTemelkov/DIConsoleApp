@@ -3,7 +3,7 @@ using DIConsoleApp.Feature.DataModel;
 
 namespace DIConsoleApp.Feature.DataStorage;
 
-public class DatabaseDataStorage
+public class SourceDataStorage
 {
     private static string ConnectionString => "my-connection-string";
 

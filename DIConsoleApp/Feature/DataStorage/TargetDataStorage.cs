@@ -4,11 +4,11 @@ using DIConsoleApp.Feature.Serializer;
 
 namespace DIConsoleApp.Feature.DataStorage;
 
-public class FileSystemDataStorage
+public class TargetDataStorage
 {
     private JsonDataSerializer DataSerializer { get; }
 
-    public FileSystemDataStorage()
+    public TargetDataStorage()
     {
         DataSerializer = new JsonDataSerializer();
     }
