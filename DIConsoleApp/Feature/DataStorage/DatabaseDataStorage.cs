@@ -3,15 +3,9 @@ using DIConsoleApp.Feature.DataModel;
 
 namespace DIConsoleApp.Feature.DataStorage;
 
-public class DatabaseDataStorage : IDataStorage
+public class DatabaseDataStorage
 {
-    private string ConnectionString { get; }
-
-    public DatabaseDataStorage(string connectionString)
-    {
-        ArgumentException.ThrowIfNullOrEmpty(connectionString);
-        ConnectionString = connectionString;
-    }
+    private static string ConnectionString => "my-connection-string";
 
     public ImmutableArray<BasicDataModel> Load()
     {

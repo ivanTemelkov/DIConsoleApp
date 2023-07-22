@@ -4,13 +4,13 @@ using DIConsoleApp.Feature.Serializer;
 
 namespace DIConsoleApp.Feature.DataStorage;
 
-public class FileSystemDataStorage : IDataStorage
+public class FileSystemDataStorage
 {
-    private IDataSerializer DataSerializer { get; }
+    private JsonDataSerializer DataSerializer { get; }
 
-    public FileSystemDataStorage(IDataSerializer dataSerializer)
+    public FileSystemDataStorage()
     {
-        DataSerializer = dataSerializer;
+        DataSerializer = new JsonDataSerializer();
     }
 
     public ImmutableArray<BasicDataModel> Load()

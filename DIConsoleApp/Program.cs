@@ -1,72 +1,51 @@
-﻿// #define CONFIG_1
-#define CONFIG_2
-//#define CONFIG_3
-//#define CONFIG_4
+﻿using DIConsoleApp.Feature.DataStorage;
 
+var databaseDataStorage = new DatabaseDataStorage();
+var fileSystemDataStorage = new FileSystemDataStorage();
 
-using DIConsoleApp.Feature.DataApplication;
-using DIConsoleApp.Feature.DataStorage;
-using DIConsoleApp.Feature.Serializer;
+Console.WriteLine("No DI ConsoleApp is running.");
+        
+Console.WriteLine("\nReads data from Database and saves it to disk.");
 
-// TODO Read this from configuration file
+Console.WriteLine("\nPress");
+Console.WriteLine("\t'l' to pull");
+Console.WriteLine("\t's' to push");
+Console.WriteLine("'q' is for quitters.");
 
-var sourceWebService = "http://www.cool-web-service.com";
-var destinationWebService = "http://www.lag-web-service.com";
-
-var sourceConnectionString = "my-connection-string";
-var destinationConnectionString = "cloud-storage-database";
-
-
-#if CONFIG_1
-var isConsoleApp = true;
-var isXmlSerializer = false;
-var sourceStorageType = DataStorageType.WebService;
-var destinationStorageType = DataStorageType.FileSystem;
-
-#elif CONFIG_2
-var isConsoleApp = true;
-var isXmlSerializer = false;
-var sourceStorageType = DataStorageType.Database;
-var destinationStorageType = DataStorageType.WebService;
-
-#elif CONFIG_3
-var isConsoleApp = true;
-var isXmlSerializer = true;
-var sourceStorageType = DataStorageType.Database;
-var destinationStorageType = DataStorageType.FileSystem;
-
-#elif CONFIG_4
-var isConsoleApp = true;
-var isXmlSerializer = false;
-var sourceStorageType = DataStorageType.WebService;
-var destinationStorageType = DataStorageType.WebService;
-#endif
-
-
-
-
-IDataSerializer serializer = (isXmlSerializer) 
-    ? new XmlDataSerializer() 
-    : new JsonDataSerializer();
-
-IDataStorage source = (sourceStorageType) switch
+while (true)
 {
-    DataStorageType.FileSystem => new FileSystemDataStorage(serializer),
-    DataStorageType.WebService => new WebServiceDataStorage(sourceWebService),
-    DataStorageType.Database => new DatabaseDataStorage(sourceConnectionString),
-    _ => throw new ArgumentOutOfRangeException()
-};
+    if (Console.KeyAvailable) 
+    {
+        var key = Console.ReadKey().KeyChar;
+        Console.WriteLine();
 
-IDataStorage destination = (destinationStorageType) switch
+        switch (key)
+        {
+            case 'q' or 'Q': 
+                return;
+
+            case 'l' or 'L':
+                Pull();
+                break;
+
+            case 's' or 'S':
+                Push();
+                break;
+        }
+    }
+            
+
+    Thread.Sleep(100);
+}
+
+void Pull()
 {
-    DataStorageType.FileSystem => new FileSystemDataStorage(serializer),
-    DataStorageType.WebService => new WebServiceDataStorage(destinationWebService),
-    DataStorageType.Database => new DatabaseDataStorage(destinationConnectionString),
-    _ => throw new ArgumentOutOfRangeException()
-};
+    var dataModels = databaseDataStorage.Load();
+    fileSystemDataStorage.Save(dataModels);
+}
 
-var app = (isConsoleApp) 
-    ? new ConsoleDataApplication(source, destination) 
-    : throw new NotImplementedException($"Currently only {nameof(ConsoleDataApplication)} is implemented!");
-
-app.Run();
+void Push()
+{
+    var data = fileSystemDataStorage.Load();
+    databaseDataStorage.Save(data);
+}

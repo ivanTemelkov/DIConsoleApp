@@ -2,7 +2,7 @@
 
 namespace DIConsoleApp.Feature.Serializer;
 
-public class JsonDataSerializer : IDataSerializer
+public class JsonDataSerializer
 {
     public string Serialize(BasicDataModel dataModel)
     {
