@@ -4,7 +4,7 @@ using DIConsoleApp.Feature.Serializer;
 
 namespace DIConsoleApp.Feature.DataStorage;
 
-public class FileSystemDataStorage
+public class TargetDataStorage
 {
     private static XmlDataSerializer XmlDataSerializer => new();
     private static JsonDataSerializer JsonDataSerializer => new();
